@@ -1,0 +1,17 @@
+{
+    "branches": ["main"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/github",
+      [
+        "semantic-release-jira-notes",
+        {
+          "jiraHost": "aivazart.atlassian.net",
+          "projectId": "FEA",
+          "username": "${{ secrets.JIRA_USERNAME }}",
+          "password": "${{ secrets.JIRA_API_TOKEN }}",
+          "ticketPrefixes": ["FEA"]
+        }
+      ]
+    ]
+  }
