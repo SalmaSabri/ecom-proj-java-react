@@ -2,12 +2,10 @@ package cz.cvut.fel.service;
 
 import cz.cvut.fel.dto.OrderRequestDto;
 import cz.cvut.fel.entity.PurchaseOrder;
-import cz.cvut.fel.event.OrderEvent;
 import cz.cvut.fel.repository.OrderRepository;
 import cz.cvut.fel.status.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +15,14 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
+    private final OrderStatusPublisher orderStatusPublisher;
 
     @Transactional
     public PurchaseOrder createOrder(OrderRequestDto orderRequestDto) {
         PurchaseOrder order = orderRepository.save(convertDtoToEntity(orderRequestDto));
         orderRequestDto.setOrderId(order.getId());
         //produce kafka event with status ORDER_CREATED
-        OrderEvent orderEvent = new OrderEvent(orderRequestDto, OrderStatus.ORDER_CREATED);
-        kafkaTemplate.send("order-topic", orderEvent);
+        orderStatusPublisher.publishOrderEvent(orderRequestDto, OrderStatus.ORDER_CREATED);
         return order;
     }
 
