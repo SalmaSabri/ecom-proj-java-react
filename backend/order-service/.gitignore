@@ -7,8 +7,6 @@ target/
 mvnw
 mvnw.cmd
 log/
-application.properties
-application.yml
 
 ### STS ###
 .apt_generated
