@@ -1,4 +1,4 @@
-package cz.cvut.fel.paymentservice;
+package cz.cvut.fel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
