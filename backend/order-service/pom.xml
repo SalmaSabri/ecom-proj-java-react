@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>fel.cvut.cz</groupId>
+        <groupId>cz.cvut.fel</groupId>
         <artifactId>backend</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>cz.cvut.fel</groupId>
     <artifactId>order-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
