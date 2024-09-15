@@ -1,7 +1,8 @@
 package cz.cvut.fel.service;
 
-import cz.cvut.fel.dto.OrderRequestDto;
+import cz.cvut.fel.dto.OrderDto;
 import cz.cvut.fel.entity.PurchaseOrder;
+import cz.cvut.fel.mapper.Mapper;
 import cz.cvut.fel.repository.OrderRepository;
 import cz.cvut.fel.status.OrderStatus;
 import jakarta.transaction.Transactional;
@@ -18,26 +19,16 @@ public class OrderService {
     private final OrderStatusPublisher orderStatusPublisher;
 
     @Transactional
-    public PurchaseOrder createOrder(OrderRequestDto orderRequestDto) {
-        PurchaseOrder order = orderRepository.save(convertDtoToEntity(orderRequestDto));
-        orderRequestDto.setOrderId(order.getId());
+    public OrderDto createOrder(OrderDto orderDto) {
+        PurchaseOrder order = orderRepository.save(Mapper.convertDtoToEntity(orderDto));
+        orderDto.setOrderId(order.getId());
         //produce kafka event with status ORDER_CREATED
-        orderStatusPublisher.publishOrderEvent(orderRequestDto, OrderStatus.ORDER_CREATED);
-        return order;
+        orderStatusPublisher.publishOrderEvent(orderDto, OrderStatus.ORDER_CREATED);
+        return Mapper.convertEntityToDto(order);
     }
 
     public List<PurchaseOrder> getAllOrders(){
         return orderRepository.findAll();
-    }
-
-
-    private PurchaseOrder convertDtoToEntity(OrderRequestDto dto) {
-        PurchaseOrder purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setProductId(dto.getProductId());
-        purchaseOrder.setUserId(dto.getUserId());
-        purchaseOrder.setOrderStatus(OrderStatus.ORDER_CREATED);
-        purchaseOrder.setPrice(dto.getAmount());
-        return purchaseOrder;
     }
 
 }

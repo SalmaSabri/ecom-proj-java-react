@@ -1,8 +1,8 @@
 package cz.cvut.fel.service;
 
 
-import cz.cvut.fel.dto.OrderRequestDto;
-import cz.cvut.fel.dto.PaymentRequestDto;
+import cz.cvut.fel.dto.OrderDto;
+import cz.cvut.fel.dto.PaymentDto;
 import cz.cvut.fel.entity.UserBalance;
 import cz.cvut.fel.entity.UserTransaction;
 import cz.cvut.fel.event.OrderEvent;
@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,11 +30,14 @@ public class PaymentService {
 
     @PostConstruct
     public void initUserBalanceInDB() {
-        userBalanceRepository.saveAll(Stream.of(new UserBalance(101, 5000),
-                new UserBalance(102, 3000),
-                new UserBalance(103, 4200),
-                new UserBalance(104, 20000),
-                new UserBalance(105, 999)).collect(Collectors.toList()));
+        userBalanceRepository.deleteAll(); // Clear the table
+        userBalanceRepository.saveAll(Stream.of(
+                new UserBalance("101", new BigDecimal(5000)),
+                new UserBalance("102", new BigDecimal(3000)),
+                new UserBalance("103", new BigDecimal(4200)),
+                new UserBalance("104", new BigDecimal(20000)),
+                new UserBalance("57e2403c-3cd7-4312-819b-2de2d15eaaef", new BigDecimal(999))
+        ).collect(Collectors.toList()));
     }
 
     /**
@@ -44,29 +48,29 @@ public class PaymentService {
      **/
     @Transactional
     public PaymentEvent newOrderEvent(OrderEvent orderEvent) {
-        OrderRequestDto orderRequestDto = orderEvent.getOrderRequestDto();
+        OrderDto orderDto = orderEvent.getOrderDto();
 
-        PaymentRequestDto paymentRequestDto = new PaymentRequestDto(orderRequestDto.getOrderId(),
-                orderRequestDto.getUserId(), orderRequestDto.getAmount());
+        PaymentDto paymentDto = new PaymentDto(orderDto.getOrderId(),
+                orderDto.getUserId(), orderDto.getAmount());
 
-        return userBalanceRepository.findById(orderRequestDto.getUserId())
-                .filter(ub -> ub.getPrice() > orderRequestDto.getAmount())
+        return userBalanceRepository.findByUserId(orderDto.getUserId())
+                .filter(ub -> ub.getPrice().compareTo(orderDto.getAmount()) > 0)
                 .map(ub -> {
-                    ub.setPrice(ub.getPrice() - orderRequestDto.getAmount());
-                    userTransactionRepository.save(new UserTransaction(orderRequestDto.getOrderId(), orderRequestDto.getUserId(), orderRequestDto.getAmount()));
-                    return new PaymentEvent(paymentRequestDto, PaymentStatus.PAYMENT_COMPLETED);
-                }).orElse(new PaymentEvent(paymentRequestDto, PaymentStatus.PAYMENT_FAILED));
+                    ub.setPrice(ub.getPrice().subtract(orderDto.getAmount()));
+                    userTransactionRepository.save(new UserTransaction(orderDto.getOrderId(), orderDto.getUserId(), orderDto.getAmount()));
+                    return new PaymentEvent(paymentDto, PaymentStatus.PAYMENT_COMPLETED);
+                }).orElse(new PaymentEvent(paymentDto, PaymentStatus.PAYMENT_FAILED));
 
     }
 
     @Transactional
     public void cancelOrderEvent(OrderEvent orderEvent) {
 
-        userTransactionRepository.findById(orderEvent.getOrderRequestDto().getOrderId())
+        userTransactionRepository.findById(orderEvent.getOrderDto().getOrderId())
                 .ifPresent(ut -> {
                     userTransactionRepository.delete(ut);
-                    userBalanceRepository.findById(ut.getUserId())
-                            .ifPresent(ub -> ub.setPrice(ub.getPrice() + ut.getAmount()));
+                    userBalanceRepository.findByUserId(ut.getUserId())
+                            .ifPresent(ub -> ub.setPrice(ub.getPrice().add(ut.getAmount())));
                 });
 
     }

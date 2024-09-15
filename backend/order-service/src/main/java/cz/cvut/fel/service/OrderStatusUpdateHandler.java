@@ -1,6 +1,6 @@
 package cz.cvut.fel.service;
 
-import cz.cvut.fel.dto.OrderRequestDto;
+import cz.cvut.fel.dto.OrderDto;
 import cz.cvut.fel.entity.PurchaseOrder;
 import cz.cvut.fel.repository.OrderRepository;
 import cz.cvut.fel.status.OrderStatus;
@@ -34,8 +34,8 @@ public class OrderStatusUpdateHandler {
         }
     }
 
-    private OrderRequestDto convertEntityToDto(PurchaseOrder purchaseOrder) {
-        OrderRequestDto orderRequestDto = new OrderRequestDto();
+    private OrderDto convertEntityToDto(PurchaseOrder purchaseOrder) {
+        OrderDto orderRequestDto = new OrderDto();
         orderRequestDto.setOrderId(purchaseOrder.getId());
         orderRequestDto.setUserId(purchaseOrder.getUserId());
         orderRequestDto.setAmount(purchaseOrder.getPrice());

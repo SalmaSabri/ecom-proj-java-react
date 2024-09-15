@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentRequestDto {
+public class PaymentDto {
 
     private Integer orderId;
-    private Integer userId;
-    private Integer amount;
+    private String userId;
+    private BigDecimal amount;
 
 }

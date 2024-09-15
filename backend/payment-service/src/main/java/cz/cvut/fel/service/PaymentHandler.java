@@ -3,18 +3,16 @@ package cz.cvut.fel.service;
 import cz.cvut.fel.event.OrderEvent;
 import cz.cvut.fel.event.PaymentEvent;
 import cz.cvut.fel.status.OrderStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PaymentHandler {
 
     private final PaymentService paymentService;
-
-    public PaymentHandler(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
 
     @KafkaListener(topics = "order-topic", groupId = "order-event-group")
     @SendTo(value = "payment-topic")
