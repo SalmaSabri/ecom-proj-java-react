@@ -10,7 +10,7 @@ spring:
       routes:
         #order
         - id: order-service
-          uri: http://localhost:8081
+          uri: lb://order-service
           predicates:
             - Path=/order-service/**
             - Method=POST
@@ -33,3 +33,7 @@ spring:
             client-secret: TnNjrrvWKucbgIpXiHDOeqgRUG5FJC45 #CHANGE
             authorization-grant-type: authorization_code #CHANGE???
             scope: openid
+eureka:
+  client:
+    service-url:
+      defaultZone: http://test:test@localhost:8000/eureka
