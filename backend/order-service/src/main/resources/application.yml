@@ -8,6 +8,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9090/realms/dev/protocol/openid-connect/certs
+
   kafka:
     consumer:
       bootstrap-servers: localhost:9092

@@ -5,13 +5,31 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - TokenRelay=
       routes:
         #order
         - id: order-service
-          uri: lb://order-service
+          uri: http://localhost:8081
           predicates:
             - Path=/order-service/**
-            - Method=GET,POST
+            - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/order-service/(?<segment>.*), /${segment}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9090/realms/dev/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9090/realms/dev
+        registration:
+          e-shop-dev: #CHANGE
+            provider: keycloak
+            client-id: devclient  #CHANGE
+            client-secret: TnNjrrvWKucbgIpXiHDOeqgRUG5FJC45 #CHANGE
+            authorization-grant-type: authorization_code #CHANGE???
+            scope: openid
