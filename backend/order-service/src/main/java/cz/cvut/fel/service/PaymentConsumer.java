@@ -13,7 +13,7 @@ public class PaymentConsumer {
 
     @KafkaListener(topics = "payment-topic", groupId = "payment-event-group")
     public void paymentEventConsumer(PaymentEvent paymentEvent) {
-        handler.updateOrder(paymentEvent.getPaymentRequestDto().getOrderId(),
+        handler.updateOrder(paymentEvent.getPaymentDto().getOrderId(),
                 po -> po.setPaymentStatus(paymentEvent.getPaymentStatus()));
     }
 }

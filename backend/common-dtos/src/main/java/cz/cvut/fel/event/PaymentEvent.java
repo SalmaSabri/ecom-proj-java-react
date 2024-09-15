@@ -1,7 +1,8 @@
 package cz.cvut.fel.event;
 
-import cz.cvut.fel.dto.PaymentRequestDto;
+import cz.cvut.fel.dto.PaymentDto;
 import cz.cvut.fel.status.PaymentStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,12 +10,13 @@ import java.util.Date;
 import java.util.UUID;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class PaymentEvent implements Event{
 
     private UUID eventId = UUID.randomUUID();
     private Date eventDate = new Date();
-    private PaymentRequestDto paymentRequestDto;
+    private PaymentDto paymentDto;
     private PaymentStatus paymentStatus;
 
     @Override
@@ -27,8 +29,8 @@ public class PaymentEvent implements Event{
         return eventDate;
     }
 
-    public PaymentEvent(PaymentRequestDto paymentRequestDto, PaymentStatus paymentStatus) {
-        this.paymentRequestDto = paymentRequestDto;
+    public PaymentEvent(PaymentDto paymentDto, PaymentStatus paymentStatus) {
+        this.paymentDto = paymentDto;
         this.paymentStatus = paymentStatus;
     }
 }

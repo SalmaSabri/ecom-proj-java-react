@@ -1,6 +1,6 @@
 package cz.cvut.fel.service;
 
-import cz.cvut.fel.dto.OrderRequestDto;
+import cz.cvut.fel.dto.OrderDto;
 import cz.cvut.fel.event.OrderEvent;
 import cz.cvut.fel.status.OrderStatus;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,8 @@ public class OrderStatusPublisher {
 
     private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
-    public void publishOrderEvent(OrderRequestDto orderRequestDto, OrderStatus orderStatus){
-        OrderEvent orderEvent = new OrderEvent(orderRequestDto,orderStatus);
+    public void publishOrderEvent(OrderDto orderDto, OrderStatus orderStatus){
+        OrderEvent orderEvent = new OrderEvent(orderDto, orderStatus);
         kafkaTemplate.send("order-topic", orderEvent);
     }
 }
