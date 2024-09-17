@@ -27,10 +27,10 @@
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
   "sslRequired": "external",
-  "registrationAllowed": false,
-  "registrationEmailAsUsername": false,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
   "rememberMe": false,
-  "verifyEmail": false,
+  "verifyEmail": true,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": false,
@@ -49,6 +49,15 @@
       {
         "id": "0068b961-6e7f-4e19-adae-2a061df067a4",
         "name": "USER",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "7816cea2-7324-4677-82b6-a01da37664af",
+        "attributes": {}
+      },
+      {
+        "id": "dd4ae713-33c1-4208-a3dd-f548f3d81166",
+        "name": "ADMIN",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -413,7 +422,30 @@
       ]
     }
   },
-  "groups": [],
+  "groups": [
+    {
+      "id": "8ed066a0-c45c-41d8-8df5-be46b8f11e77",
+      "name": "ADMINS",
+      "path": "/ADMINS",
+      "subGroups": [],
+      "attributes": {},
+      "realmRoles": [
+        "ADMIN"
+      ],
+      "clientRoles": {}
+    },
+    {
+      "id": "f39a2abc-3b55-4e06-925b-fb3fcba2b6f5",
+      "name": "USERS",
+      "path": "/USERS",
+      "subGroups": [],
+      "attributes": {},
+      "realmRoles": [
+        "USER"
+      ],
+      "clientRoles": {}
+    }
+  ],
   "defaultRole": {
     "id": "d450125c-7c5c-4369-abcd-69bba00befb9",
     "name": "default-roles-dev",
@@ -422,6 +454,9 @@
     "clientRole": false,
     "containerId": "7816cea2-7324-4677-82b6-a01da37664af"
   },
+  "defaultGroups": [
+    "/USERS"
+  ],
   "requiredCredentials": [
     "password"
   ],
@@ -1424,7 +1459,20 @@
     "xXSSProtection": "1; mode=block",
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },
-  "smtpServer": {},
+  "smtpServer": {
+    "password": "**********",
+    "replyToDisplayName": "",
+    "starttls": "true",
+    "auth": "true",
+    "port": "465",
+    "replyTo": "",
+    "host": "smtp.seznam.cz",
+    "from": "artem042003@email.cz",
+    "fromDisplayName": "Artem",
+    "envelopeFrom": "",
+    "ssl": "true",
+    "user": "artem042003@email.cz"
+  },
   "eventsEnabled": false,
   "eventsListeners": [
     "jboss-logging"
@@ -2244,13 +2292,18 @@
   "firstBrokerLoginFlow": "first broker login",
   "attributes": {
     "cibaBackchannelTokenDeliveryMode": "poll",
-    "cibaExpiresIn": "120",
     "cibaAuthRequestedUserHint": "login_hint",
-    "oauth2DeviceCodeLifespan": "600",
     "oauth2DevicePollingInterval": "5",
-    "parRequestUriLifespan": "60",
+    "clientOfflineSessionMaxLifespan": "0",
+    "clientSessionIdleTimeout": "0",
+    "clientOfflineSessionIdleTimeout": "0",
     "cibaInterval": "5",
-    "realmReusableOtpCode": "false"
+    "realmReusableOtpCode": "false",
+    "cibaExpiresIn": "120",
+    "oauth2DeviceCodeLifespan": "600",
+    "parRequestUriLifespan": "60",
+    "clientSessionMaxLifespan": "0",
+    "organizationsEnabled": "false"
   },
   "keycloakVersion": "25.0.2",
   "userManagedAccessAllowed": false,

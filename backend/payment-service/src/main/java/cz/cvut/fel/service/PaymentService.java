@@ -3,21 +3,19 @@ package cz.cvut.fel.service;
 
 import cz.cvut.fel.dto.OrderDto;
 import cz.cvut.fel.dto.PaymentDto;
-import cz.cvut.fel.entity.UserBalance;
+import cz.cvut.fel.dto.UserBalanceDto;
 import cz.cvut.fel.entity.UserTransaction;
 import cz.cvut.fel.event.OrderEvent;
 import cz.cvut.fel.event.PaymentEvent;
+import cz.cvut.fel.mapper.Mapper;
 import cz.cvut.fel.repository.UserBalanceRepository;
 import cz.cvut.fel.repository.UserTransactionRepository;
 import cz.cvut.fel.status.PaymentStatus;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -28,17 +26,6 @@ public class PaymentService {
     private UserTransactionRepository userTransactionRepository;
 
 
-    @PostConstruct
-    public void initUserBalanceInDB() {
-        userBalanceRepository.deleteAll(); // Clear the table
-        userBalanceRepository.saveAll(Stream.of(
-                new UserBalance("101", new BigDecimal(5000)),
-                new UserBalance("102", new BigDecimal(3000)),
-                new UserBalance("103", new BigDecimal(4200)),
-                new UserBalance("104", new BigDecimal(20000)),
-                new UserBalance("57e2403c-3cd7-4312-819b-2de2d15eaaef", new BigDecimal(999))
-        ).collect(Collectors.toList()));
-    }
 
     /**
      * // get the user id
@@ -73,5 +60,25 @@ public class PaymentService {
                             .ifPresent(ub -> ub.setPrice(ub.getPrice().add(ut.getAmount())));
                 });
 
+    }
+
+    public UserBalanceDto createBalance(UserBalanceDto userBalanceDto) {
+        if (userBalanceDto.getPrice() == null) {
+            userBalanceDto.setPrice(BigDecimal.ZERO);
+        }
+        var ub = Mapper.convertDtoToEntity(userBalanceDto);
+        var savedUb = userBalanceRepository.save(ub);
+        return Mapper.convertEntityToDto(savedUb);
+    }
+
+    @Transactional
+    public UserBalanceDto topUpBalance(UserBalanceDto userBalanceDto) {
+        return userBalanceRepository.findByUserId(userBalanceDto.getUserId())
+                .map(existingBalance -> {
+                    existingBalance.setPrice(existingBalance.getPrice().add(userBalanceDto.getPrice()));
+                    var updatedBalance = userBalanceRepository.save(existingBalance);
+                    return Mapper.convertEntityToDto(updatedBalance);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("User balance not found"));
     }
 }
