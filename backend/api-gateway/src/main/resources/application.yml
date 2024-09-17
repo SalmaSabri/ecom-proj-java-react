@@ -17,6 +17,15 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/order-service/(?<segment>.*), /${segment}
+        #payment
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment-service/**
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/payment-service/(?<segment>.*), /${segment}
   security:
     oauth2:
       resourceserver:
@@ -30,7 +39,7 @@ spring:
           e-shop-dev: #CHANGE
             provider: keycloak
             client-id: devclient  #CHANGE
-            client-secret: TnNjrrvWKucbgIpXiHDOeqgRUG5FJC45 #CHANGE
+            client-secret: 4euxxJa6izbZRSvXAvY6smHquZMVTujG #CHANGE
             authorization-grant-type: authorization_code #CHANGE???
             scope: openid
 eureka:
