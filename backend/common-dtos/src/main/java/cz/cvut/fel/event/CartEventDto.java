@@ -1,23 +1,24 @@
 package cz.cvut.fel.event;
 
-import cz.cvut.fel.dto.OrderDto;
-import cz.cvut.fel.status.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class OrderEvent implements Event{
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class CartEventDto implements Event{
     private UUID eventId = UUID.randomUUID();
     private Date eventDate = new Date();
-    private OrderDto orderDto;
-    private OrderStatus orderStatus;
+    private String userId;
+    private String productId;
+    private String productName;
+    private BigDecimal quantity;
+    private BigDecimal price;
 
     @Override
     public UUID getEventId() {
@@ -27,10 +28,5 @@ public class OrderEvent implements Event{
     @Override
     public Date getDate() {
         return this.eventDate;
-    }
-
-    public OrderEvent(OrderDto orderDto, OrderStatus orderStatus) {
-        this.orderDto = orderDto;
-        this.orderStatus = orderStatus;
     }
 }

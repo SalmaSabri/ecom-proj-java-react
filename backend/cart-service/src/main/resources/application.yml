@@ -1,9 +1,9 @@
 spring:
   application:
-    name: order-service
+    name: cart-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5431/order-db
+    url: jdbc:postgresql://localhost:5432/cart-db
     username: admin
     password: 123
   jpa:
@@ -17,16 +17,16 @@ spring:
           jwk-set-uri: http://localhost:9090/realms/dev/protocol/openid-connect/certs
 
   kafka:
-    consumer:
-      bootstrap-servers: localhost:9092
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      group-id: payment-event-group
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: "*"
+#    consumer:
+#      bootstrap-servers: localhost:9092
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      group-id: payment-event-group
+#      properties:
+#        spring:
+#          json:
+#            trusted:
+#              packages: "*"
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
