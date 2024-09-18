@@ -21,12 +21,12 @@ public class PaymentEvent implements Event{
 
     @Override
     public UUID getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     @Override
     public Date getDate() {
-        return eventDate;
+        return this.eventDate;
     }
 
     public PaymentEvent(PaymentDto paymentDto, PaymentStatus paymentStatus) {

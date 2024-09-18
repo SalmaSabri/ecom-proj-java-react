@@ -35,6 +35,15 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/inventory-service/(?<segment>.*), /${segment}
+        #cart
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart-service/**
+            - Method=POST,GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/cart-service/(?<segment>.*), /${segment}
   security:
     oauth2:
       resourceserver:
