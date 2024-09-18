@@ -28,6 +28,19 @@ services:
     volumes:
       - ./data/payment-db:/data/postgres
 
+  mongo:
+    container_name: product-db
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+    volumes:
+      - ./data/product-db:/data/db
+
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
