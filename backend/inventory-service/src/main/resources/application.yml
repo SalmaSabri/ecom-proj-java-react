@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: inventory-service
+
+  data:
+    mongodb:
+      database: product-db
+      authentication-database: admin
+      uri: mongodb://root:mongo@localhost:27017/${spring.data.mongodb.database}?authSource=${spring.data.mongodb.authentication-database}&readPreference=primaryPreferred&directConnection=true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9090/realms/dev/protocol/openid-connect/certs
+
+#  kafka:
+#    consumer:
+#      bootstrap-servers: localhost:9092
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      group-id: payment-event-group
+#      properties:
+#        spring:
+#          json:
+#            trusted:
+#              packages: "*"
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://test:test@localhost:8000/eureka
