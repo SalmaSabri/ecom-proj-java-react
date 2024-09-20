@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -41,4 +42,17 @@ public class CartController {
         return cart.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PostMapping("/submit")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> submitCart() {
+        Principal principal = request.getUserPrincipal();
+        String userId = principal.getName();
+
+        // Submit the cart for the authenticated user
+        cartService.submitCart(userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
