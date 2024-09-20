@@ -1,7 +1,7 @@
 package cz.cvut.fel.service;
 
-import cz.cvut.fel.dto.OrderDto;
 import cz.cvut.fel.entity.PurchaseOrder;
+import cz.cvut.fel.mapper.Mapper;
 import cz.cvut.fel.repository.OrderRepository;
 import cz.cvut.fel.status.OrderStatus;
 import cz.cvut.fel.status.PaymentStatus;
@@ -29,17 +29,9 @@ public class OrderStatusUpdateHandler {
         boolean isPaymentComplete = PaymentStatus.PAYMENT_COMPLETED.equals(purchaseOrder.getPaymentStatus());
         OrderStatus orderStatus = isPaymentComplete ? OrderStatus.ORDER_COMPLETED : OrderStatus.ORDER_CANCELLED;
         purchaseOrder.setOrderStatus(orderStatus);
+        orderStatusPublisher.publishHistoryEvent(Mapper.convertEntityToDto(purchaseOrder));
         if (!isPaymentComplete) {
-            orderStatusPublisher.publishOrderEvent(convertEntityToDto(purchaseOrder), orderStatus);
+            orderStatusPublisher.publishOrderEvent(Mapper.convertEntityToDto(purchaseOrder), orderStatus);
         }
-    }
-
-    private OrderDto convertEntityToDto(PurchaseOrder purchaseOrder) {
-        OrderDto orderRequestDto = new OrderDto();
-        orderRequestDto.setOrderId(purchaseOrder.getId());
-        orderRequestDto.setUserId(purchaseOrder.getUserId());
-        orderRequestDto.setAmount(purchaseOrder.getPrice());
-        orderRequestDto.setProductId(purchaseOrder.getProductId());
-        return orderRequestDto;
     }
 }

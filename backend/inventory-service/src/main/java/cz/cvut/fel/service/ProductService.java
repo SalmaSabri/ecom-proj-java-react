@@ -28,7 +28,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void checkProductAvailability(String productId, BigDecimal quantity) {
+    public Product checkProductAvailability(String productId, BigDecimal quantity) {
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (productOptional.isPresent()) {
@@ -38,8 +38,9 @@ public class ProductService {
             if (product.getQuantity().compareTo(quantity) >= 0) {
                 // Reduce the stock
                 product.setQuantity(product.getQuantity().subtract(quantity));
-                productRepository.save(product);
+                Product savedProduct = productRepository.save(product);
                 log.info("Product {} stock updated, remaining quantity: {}", productId, product.getQuantity());
+                return savedProduct;
             } else {
                 log.warn("Not enough stock for product {}", productId);
                 throw new RuntimeException("Not enough stock available for product: " + productId);

@@ -9,17 +9,9 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaConfig {
 
     @Bean
-    public NewTopic orderTopic(){
+    public NewTopic paymentTopic(){
         return TopicBuilder
-                .name("order-topic")
-                .partitions(1)
-                .build();
-    }
-
-    @Bean
-    public NewTopic historyTopic(){
-        return TopicBuilder
-                .name("history-topic")
+                .name("inventory-topic")
                 .partitions(1)
                 .build();
     }
