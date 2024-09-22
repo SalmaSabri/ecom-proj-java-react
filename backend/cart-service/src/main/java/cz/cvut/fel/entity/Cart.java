@@ -6,6 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity representing a shopping cart in the system.
+ *
+ * Each cart is associated with a specific user and contains one or more {@link CartItem} entries.
+ * The cart entity stores the user ID to associate the cart with a specific user.
+ */
 @Entity
 @Table(name = "cart")
 @AllArgsConstructor

@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Data Transfer Object representing a product.
+ *
+ * Contains product details such as ID, name, description, price, and quantity.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

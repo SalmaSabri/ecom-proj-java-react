@@ -10,7 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * Event representing a user's order history.
+ *
+ * Contains details about the user and their previous orders.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +23,7 @@ public class HistoryEvent implements Event{
     private UUID eventId = UUID.randomUUID();
     private Date eventDate = new Date();
     private String userId;
-    private Integer orderId;
+    private Long orderId;
     private List<OrderItemDto> orderItemDtos;
     @Override
     public UUID getEventId() {

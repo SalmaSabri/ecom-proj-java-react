@@ -1,60 +1,43 @@
 package cz.cvut.fel.service;
 
-import cz.cvut.fel.dto.OrderDto;
-import cz.cvut.fel.entity.Cart;
-import cz.cvut.fel.entity.CartItem;
-import cz.cvut.fel.event.CartEventDto;
-import cz.cvut.fel.repository.CartItemRepository;
-import cz.cvut.fel.repository.CartRepository;
+import cz.cvut.fel.dto.CartDto;
+import cz.cvut.fel.event.CartEvent;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+/**
+ * Service interface for managing cart-related operations.
+ *
+ * Provides methods for adding products to a cart, submitting a cart for checkout, and
+ * retrieving a user's cart details.
+ */
+public interface CartService {
 
-@Service
-@RequiredArgsConstructor
-public class CartService {
-
-    private final CartRepository cartRepository;
-    private final CartItemRepository cartItemRepository;
-    private final CartProducer cartProducer;
-    private final OrderServiceClient orderServiceClient;
-
-
+    /**
+     * Adds a product to the user's cart by sending a cart event to the appropriate service.
+     *
+     * @param cartEvent the event containing details of the product to be added.
+     */
     @Transactional
-    public void addProductToCart(CartEventDto cartEventDto) {
-        cartProducer.sendCartEvent(cartEventDto);  // Send the event to inventory service
-    }
+    void addProductToCart(CartEvent cartEvent);
 
+    /**
+     * Submits the user's cart for order creation and checkout.
+     *
+     * This method fetches the user's cart, calculates the total price, and calls the order
+     * service to create an order.
+     *
+     * @param userId the ID of the user submitting the cart.
+     */
     @Transactional
-    public void submitCart(String userId) {
-        // Fetch the cart by userId
-        Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
-        if (cartOptional.isPresent()) {
-            Cart cart = cartOptional.get();
-            List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
+    void submitCart(String userId);
 
-            // Create an OrderDto from the cart items
-            OrderDto orderDto = new OrderDto();
-            orderDto.setUserId(userId);
-
-            // Calculate total price
-            BigDecimal totalPrice = cartItems.stream()
-                    .map(cartItem -> cartItem.getPrice().multiply(cartItem.getQuantity()))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            orderDto.setAmount(totalPrice);  // Set the total price in OrderDto
-
-            // Call the order service to create the order
-            orderServiceClient.createOrder(orderDto);
-
-        } else {
-            throw new RuntimeException("No cart found for user: " + userId);
-        }
-    }
-
-
+    /**
+     * Retrieves the cart details for the authenticated user.
+     *
+     * This method fetches the user's cart and its items and returns them in a {@link CartDto}.
+     *
+     * @param userId the ID of the user whose cart is being retrieved.
+     * @return a {@link CartDto} containing the cart details.
+     */
+    CartDto getUserCart(String userId);
 }

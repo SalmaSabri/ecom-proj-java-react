@@ -1,34 +1,36 @@
 package cz.cvut.fel.service;
 
 import cz.cvut.fel.dto.OrderDto;
-import cz.cvut.fel.entity.PurchaseOrder;
-import cz.cvut.fel.mapper.Mapper;
-import cz.cvut.fel.repository.OrderRepository;
-import cz.cvut.fel.status.OrderStatus;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class OrderService {
+/**
+ * Service interface for managing orders.
+ *
+ * Provides methods for creating and retrieving orders.
+ */
+public interface OrderService {
 
-    private final OrderRepository orderRepository;
-    private final OrderStatusPublisher orderStatusPublisher;
-
+    /**
+     * Creates a new order.
+     *
+     * This method saves the order details to the database and publishes an event to indicate
+     * that the order has been created.
+     *
+     * @param orderDto the details of the order to be created.
+     * @return the created {@link OrderDto}.
+     */
     @Transactional
-    public OrderDto createOrder(OrderDto orderDto) {
-        PurchaseOrder order = orderRepository.save(Mapper.convertDtoToEntity(orderDto));
-        orderDto.setOrderId(order.getId());
-        //produce kafka event with status ORDER_CREATED
-        orderStatusPublisher.publishOrderEvent(orderDto, OrderStatus.ORDER_CREATED);
-        return Mapper.convertEntityToDto(order);
-    }
+    OrderDto createOrder(OrderDto orderDto);
 
-    public List<PurchaseOrder> getAllOrders(){
-        return orderRepository.findAll();
-    }
-
+    /**
+     * Retrieves all orders for a specific user.
+     *
+     * This method fetches all orders associated with the given user ID.
+     *
+     * @param userId the ID of the user whose orders are to be fetched.
+     * @return a list of {@link OrderDto} containing the user's orders.
+     */
+    List<OrderDto> getAllOrders(String userId);
 }
