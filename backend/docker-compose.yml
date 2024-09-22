@@ -3,7 +3,7 @@ version: "3.8"
 services:
 
   cart-db:
-    image: postgres:15
+    image: postgres:14
     container_name: cart-db
     environment:
       POSTGRES_DB: cart-db
@@ -16,7 +16,7 @@ services:
       - ./data/cart-db:/data/postgres
 
   order-db:
-    image: postgres:15
+    image: postgres:14
     container_name: order-db
     environment:
       POSTGRES_DB: order-db
@@ -29,7 +29,7 @@ services:
       - ./data/order-db:/data/postgres
 
   payment-db:
-    image: postgres:15
+    image: postgres:14
     container_name: payment-db
     environment:
       POSTGRES_DB: payment-db

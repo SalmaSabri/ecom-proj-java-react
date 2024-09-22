@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Entity representing an item within a shopping cart.
+ *
+ * Each item is associated with a specific {@link Cart} and contains product details,
+ * such as the product ID, name, quantity, and price.
+ */
 @Entity
 @Table(name = "cart_item")
 @Data

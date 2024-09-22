@@ -13,7 +13,7 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/order-service/**
-            - Method=POST
+            - Method=POST,GET
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/order-service/(?<segment>.*), /${segment}
@@ -22,7 +22,7 @@ spring:
           uri: lb://payment-service
           predicates:
             - Path=/payment-service/**
-            - Method=POST
+            - Method=POST,GET
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/payment-service/(?<segment>.*), /${segment}
@@ -54,11 +54,11 @@ spring:
           keycloak:
             issuer-uri: http://localhost:9090/realms/dev
         registration:
-          e-shop-dev: #CHANGE
+          dev:
             provider: keycloak
-            client-id: devclient  #CHANGE
-            client-secret: Ccqr6MmWxRvqlYypqogG6PXCXN53MxYU #CHANGE
-            authorization-grant-type: authorization_code #CHANGE???
+            client-id: devclient
+            client-secret: Ccqr6MmWxRvqlYypqogG6PXCXN53MxYU
+            authorization-grant-type: authorization_code
             scope: openid
 eureka:
   client:

@@ -21,11 +21,16 @@ spring:
       bootstrap-servers: localhost:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: inventory-event-group
       properties:
         spring:
           json:
             trusted:
               packages: "*"
+    listener:
+      concurrency: 3 # Number of concurrent threads per listener container
+      missing-topics-fatal: false # Do not fail if a topic does not exist
+
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

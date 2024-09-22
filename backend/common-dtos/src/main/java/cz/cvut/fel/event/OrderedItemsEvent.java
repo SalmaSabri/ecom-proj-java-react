@@ -10,6 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Event representing ordered items in an order.
+ *
+ * Contains a list of order items associated with an order.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

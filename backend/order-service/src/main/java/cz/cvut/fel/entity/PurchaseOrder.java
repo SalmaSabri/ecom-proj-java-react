@@ -3,6 +3,7 @@ package cz.cvut.fel.entity;
 import cz.cvut.fel.status.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,10 +14,11 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PurchaseOrder {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String userId;
     private BigDecimal price;
     @Enumerated(EnumType.STRING)
