@@ -1,5 +1,6 @@
 package cz.cvut.fel.entity;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,18 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 
-/**
- * Entity representing a product in the system.
- *
- * This entity is mapped to a MongoDB collection named "product". It contains information about
- * the product such as its ID, name, description, price, and quantity.
- */
-@Document(value = "product")
+@Entity
+@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -27,6 +21,7 @@ import java.math.BigDecimal;
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @NotBlank(message = "Product name is required")
     @Size(min = 2, max = 100, message = "Product name must be between 2 and 100 characters")
